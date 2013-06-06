@@ -1,7 +1,8 @@
-Dependencies:
+Install dependencies:
 
-	npm install coffee-script express socket.io
+	npm install
+![dependencies status](https://david-dm.org/markmsmith/fingerpaint.png)
 
 Then do:
 
-	./fingerpaint
+	coffee ./fingerpaint
