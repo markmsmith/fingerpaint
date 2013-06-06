@@ -3,6 +3,8 @@
 sys      = require 'sys'
 express  = require 'express'
 socketio = require 'socket.io'
+coffeescript = require 'connect-coffee-script'
+
 
 config =
 	port:      3000
@@ -10,50 +12,50 @@ config =
 
 # set up express
 
-app = express.createServer()
+app = express()
 
-app.use express.compiler
+app.use coffeescript(
 	src:    'src'
 	dest:   config.publicDir
-	enable: ['coffeescript']
+)
 
 app.use express.static(config.publicDir)
 
-app.listen config.port, ->
-	addr = app.address()
+httpServer = app.listen config.port, ->
+	addr = httpServer.address()
 	sys.puts "[fingerpaint] listening on http://#{addr.address}:#{addr.port}"
 
 # set up socket.io
 
 randomColor = ->
 	"#{Math.floor(Math.random() * 128 + 32)},#{Math.floor(Math.random() * 128 + 32)},#{Math.floor(Math.random() * 128 + 32)}"
-	
-io = socketio.listen app
+
+io = socketio.listen httpServer
 io.set 'log level', 0
 
 users = {}
 
 io.sockets.on 'connection', (socket) ->
-	
+
 	sys.puts "[fingerpaint] user #{socket.id} connected"
-	
+
 	user =
 		id:    socket.id
 		nick:  socket.id
 		color: randomColor()
-		
+
 	users[socket.id] = user
-	
+
 	socket.json.emit 'hello', user, users
 	socket.broadcast.json.emit 'join', user
-	
+
 	socket.on 'move', (position, drawing) ->
 		io.sockets.json.emit 'move', socket.id, position, drawing
-	
+
 	socket.on 'nick', (nick) ->
 		user.nick = nick
 		io.sockets.json.emit 'nick', socket.id, nick
-		
+
 	socket.on 'disconnect', ->
 		delete users[socket.id]
 		socket.broadcast.emit 'part', user

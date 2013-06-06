@@ -1,0 +1,19 @@
+{
+  "name": "fingerpaint",
+  "author": "Nate Kohari <nkohari@gmail.com> (https://github.com/nkohari/fingerpaint)",
+  "contributors": "Mark Smith <MarkMackenzieSmith@gmail.com> (https://github.com/markmsmith/fingerpaint)",
+  "version": "0.5.0",
+  "bin": {
+    "fingerpaint": "./fingerpaint"
+  },
+  "dependencies": {
+    "coffee-script": ">=1.6.0",
+    "express": ">=1.2.0",
+    "socket.io": ">=0.8.0",
+    "connect-coffee-script": "0.1.x"
+  },
+  "license": "MIT",
+  "engines": {
+    "node": ">=0.6"
+  }
+}
